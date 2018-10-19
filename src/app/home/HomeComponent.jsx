@@ -3,9 +3,9 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from "prop-types";
 
-import EnhancedTableComponent from './EnhancedTableComponent';
-import CreateButtonComponent from './CreateButtonComponent';
-import CreateRequestDialogComponent from './CreateRequestDialogComponent';
+import EnhancedTableComponent from './EnhancedTableComponent.jsx';
+import CreateButtonComponent from './CreateButtonComponent.jsx';
+import CreateRequestDialogComponent from './CreateRequestDialogComponent.jsx';
 
 // dummy data
 const data = [{

@@ -7,17 +7,18 @@ import {
 
 import './App.css';
 import HomeComponent from './home/HomeComponent';
-import SigninComponent from './signin/SigninComponent';
+import LoginContainer from './login/LoginContainer';
+import PrivateRoute from './common/PrivateRoute';
 
 class App extends Component {
   render() {
     return (
       <Router>
         <Switch>
-          <Route path="/" exact component={HomeComponent} />
-          <Route path="/login" component={SigninComponent} />
-          <Route path="/addLeaveRequest" component={HomeComponent} />
-          <Route component={SigninComponent} />
+          <PrivateRoute path="/" exact component={HomeComponent} />
+          <Route path="/login" component={LoginContainer} />
+          <PrivateRoute path="/addLeaveRequest" component={HomeComponent} />
+          <Route component={LoginContainer} />
         </Switch>
       </Router>
     );

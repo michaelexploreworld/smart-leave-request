@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
+
+import { isValid } from '../../utils/userService'
 
 const styles = theme => ({
     layout: {
@@ -38,22 +38,67 @@ const styles = theme => ({
     },
 });
 
-class SigninComponent extends Component {
+class LoginComponent extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            username: '',
+            password: ''
+        };
+    }
+
+    componentWillMount() {
+        if(isValid()) {
+            this.props.history.push('/');
+        } 
+    }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.loggingIn !== prevProps.loggingIn && this.props.loggingIn) {
+            this.props.history.push('/');
+        }
+    }
+
+    handleChange = name => event => {
+        this.setState({ [name]: event.target.value });
+    }
+
+    handleLogin = event => {
+        const { onLoginRequest } =  this.props;
+        const { username, password } = this.state;
+
+        event.preventDefault();
+        if(username && password) {
+            onLoginRequest(username, password);
+        }
+    }
+
     render() {
-        const { classes } = this.props;
+        const { classes, message } = this.props;
+        const { username, password } = this.state;
 
         return (
             <React.Fragment>
                 <CssBaseline />
                 <main className={classes.layout}>
                     <Paper className={classes.paper}>
+                        {message && 
+                            <Typography component="h1" variant="h5">
+                                {message}
+                            </Typography>}
                         <Typography component="h1" variant="h5">
                             Smart Leave Request
                         </Typography>
-                        <form className={classes.form}>
+                        <form className={classes.form} onSubmit={this.handleLogin}>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="username">Username</InputLabel>
-                                <Input id="username" name="username" autoComplete="username" autoFocus />
+                                <Input 
+                                    id="username" 
+                                    name="username"
+                                    autoFocus
+                                    defaultValue={username}
+                                    onChange={this.handleChange("username")} />
                             </FormControl>
                             <FormControl margin="normal" required fullWidth>
                                 <InputLabel htmlFor="password">Password</InputLabel>
@@ -61,13 +106,9 @@ class SigninComponent extends Component {
                                     name="password"
                                     type="password"
                                     id="password"
-                                    autoComplete="current-password"
-                                />
+                                    defaultValue={password}
+                                    onChange={this.handleChange("password")} />
                             </FormControl>
-                            <FormControlLabel className={classes.checkbox}
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
                             <Button
                                 type="submit"
                                 fullWidth
@@ -75,7 +116,7 @@ class SigninComponent extends Component {
                                 color="primary"
                                 className={classes.submit}
                             >
-                                Sign in
+                                Log in
                             </Button>
                         </form>
                     </Paper>
@@ -85,9 +126,9 @@ class SigninComponent extends Component {
     }
 }
 
-SigninComponent.propTypes = {
+LoginComponent.propTypes = {
     classes: PropTypes.object.isRequired,
 };
   
 
-export default withStyles(styles)(SigninComponent);
+export default withStyles(styles)(LoginComponent);
