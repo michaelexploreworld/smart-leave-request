@@ -1,5 +1,17 @@
 import jwtDecode from 'jwt-decode';
 
+function handleResponse(response) {
+    return response.text().then(text => {
+        const data = text && JSON.parse(text);
+        if (!response.ok) {
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+        }
+
+        return data.data;
+    });
+}
+
 function login(username, password) {
     const API_URL = `https://auth-staging.assignar.com.au/login`;
     const requestOptions = {
@@ -20,37 +32,19 @@ function login(username, password) {
             let extractedUser = {};
 
             if(token) {
+                extractedUser = extractUser(token);
                 localStorage.setItem('user', token);
-                extractedUser = extractUser(user);
             }
             return extractedUser;
         });
 }
 
-function logout() {
-    // Remove user from local storage to log user out
-    localStorage.removeItem('user');
-}
-
-function handleResponse(response) {
-    return response.text().then(text => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-
-        return data.data;
-    });
-}
-
-function extractUser() {
-    const userToken = localStorage.getItem('user');
+function extractUser(token) {
     let user = {};
     
     try {
-        if(userToken) {
-            user = jwtDecode(userToken);
+        if(token) {
+            user = jwtDecode(token);
         }
     } catch(error) {
         console.error("Extract user error: ", error.message);
@@ -58,9 +52,7 @@ function extractUser() {
     return user;
 }
 
-function isValid() {
-    const user = extractUser();
-
+function isAuthenticated(user) {
     if(!user) {
         return false;
     } else if(!user.exp) {
@@ -72,9 +64,18 @@ function isValid() {
     }
 }
 
+function authHeader() {
+    let token = localStorage.getItem('user');
+
+    if (token) {
+        return { 'Authorization': 'Bearer ' + token };
+    } else {
+        return {};
+    }
+}
+
 export {
     login,
-    logout,
-    extractUser,
-    isValid
+    isAuthenticated,
+    authHeader
 };

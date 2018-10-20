@@ -1,19 +1,33 @@
 import { createStore, applyMiddleware } from 'redux';
 import { createLogger } from 'redux-logger'; 
 import createSagaMiddleware from 'redux-saga';
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
 import rootReducer from './reducers';
 import rootSaga from './sagas';
 
-const logger = createLogger();
-const saga = createSagaMiddleware();
+function createPersistedStore() {
+    // Create persist reducer.
+    const persistConfig = {
+        key: 'root',
+        storage,
+    };
+    const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-const store = createStore(
-    rootReducer,
-    undefined,
-    applyMiddleware(saga, logger)
-);
+    // Create store with middleware.
+    const logger = createLogger();
+    const saga = createSagaMiddleware();
+    const store = createStore(
+        persistedReducer,
+        undefined,
+        applyMiddleware(saga, logger)
+    );
+    const persistor = persistStore(store);
 
-saga.run(rootSaga);
+    saga.run(rootSaga);
 
-export default store;
+    return { store, persistor };
+}
+
+export default createPersistedStore;

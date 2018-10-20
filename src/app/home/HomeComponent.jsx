@@ -2,37 +2,13 @@ import React, { Component } from 'react';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import PropTypes from "prop-types";
+import { Query } from "react-apollo";
 
 import EnhancedTableComponent from './EnhancedTableComponent.jsx';
 import CreateButtonComponent from './CreateButtonComponent.jsx';
 import CreateRequestDialogComponent from './CreateRequestDialogComponent.jsx';
-
-// dummy data
-const data = [{
-    id: "1",
-    leave_type: "Aeave type",
-    start_datetime: "2018-10-01",
-    end_datetime: "2018-10-10",
-    created_time: "2018-11-09",
-}, {
-    id: "2",
-    leave_type: "Beave type",
-    start_datetime: "2018-10-01",
-    end_datetime: "2018-10-10",
-    created_time: "2018-06-09",
-}, {
-    id: "3",
-    leave_type: "Ceave type",
-    start_datetime: "2018-09-01",
-    end_datetime: "2018-10-15",
-    created_time: "2018-09-02",
-}, {
-    id: "4",
-    leave_type: "Deave type",
-    start_datetime: "2018-08-01",
-    end_datetime: "2018-08-15",
-    created_time: "2018-07-09",
-}];
+import { getLeaveRequestsQuery } from '../queries/queries';
+import { readClient } from '../../apolloClients'
 
 const styles = theme => ({
     layout: {
@@ -41,7 +17,7 @@ const styles = theme => ({
         height: '100%',
     },
     floatButton: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: '50px',
         left: '50px'
     }
@@ -49,20 +25,31 @@ const styles = theme => ({
 
 class HomeComponent extends Component {
     render() {
-        const { classes } = this.props;
+        const { classes, user } = this.props;
 
         return (
-            <div className={classes.layout}>
-                <Typography align="center" variant="h4" paragraph>
-                    Yi's Leave Request List
-                </Typography>
-                <EnhancedTableComponent data={data} />
-                <div className={classes.floatButton}>
-                    <CreateButtonComponent>
-                        <CreateRequestDialogComponent/>
-                    </CreateButtonComponent>
-                </div>
-            </div>
+            <Query query={getLeaveRequestsQuery} client={readClient}>
+                {({ loading, error, data }) => {
+                    if (loading) return "Loading...";
+                    if (error) return `Error! ${error.message}`;
+
+                    console.log("HomeComponent: ", data.LeaveRequests);
+
+                    return (
+                        <div className={classes.layout}>
+                            <Typography align="center" variant="h4" paragraph>
+                                Yi's Leave Request List
+                            </Typography>
+                            <EnhancedTableComponent data={data.LeaveRequests} />
+                            <div className={classes.floatButton}>
+                                <CreateButtonComponent>
+                                    <CreateRequestDialogComponent userId={user.user_id}/>
+                                </CreateButtonComponent>
+                            </div>
+                        </div>
+                    );
+                }}
+            </Query>
         );
     }
 }

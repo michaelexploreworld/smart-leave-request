@@ -16,6 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { lighten } from "@material-ui/core/styles/colorManipulator";
+import moment from 'moment-timezone';
 
 class EnhancedTableHead extends React.Component {
     render() {
@@ -131,12 +132,16 @@ const styles = theme => ({
 });
 
 class EnhancedTableComponent extends React.Component {
-    state = {
-        selected: [],
-        data: this.props.data,
-        page: 0,
-        rowsPerPage: 5
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selected: [],
+            data: props.data,
+            page: 0,
+            rowsPerPage: 5
+        };
+    }
 
     handleSelectAllClick = event => {
         if (event.target.checked) {
@@ -177,6 +182,10 @@ class EnhancedTableComponent extends React.Component {
 
     isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+    formatDate = (dateStr) => {
+        return moment.tz(dateStr, "Australia/Sydney").format('YYYY-MM-DD');
+    }
+
     render() {
         const { classes } = this.props;
         const { data, selected, rowsPerPage, page } = this.state;
@@ -211,16 +220,16 @@ class EnhancedTableComponent extends React.Component {
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
                                             <TableCell>
-                                                {n.leave_type}
+                                                {n.leave_type && n.leave_type.label}
                                             </TableCell>
                                             <TableCell>
-                                                {n.start_datetime}
+                                                {n.start_datetime && this.formatDate(n.start_datetime)}
                                             </TableCell>
                                             <TableCell>
-                                                {n.end_datetime}
+                                                {n.end_datetime && this.formatDate(n.end_datetime)}
                                             </TableCell>
                                             <TableCell>
-                                                {n.created_time}
+                                                {n.created_time && this.formatDate(n.created_time)}
                                             </TableCell>
                                         </TableRow>
                                     );

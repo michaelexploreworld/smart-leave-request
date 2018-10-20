@@ -6,6 +6,7 @@ import LoginComponent from './LoginComponent';
 
 const mapStateToProps = state => ({
     loggingIn: loginSelectors.getLoggingIn(state),
+    user: loginSelectors.getUser(state),
     message: loginSelectors.getMessage(state)
 });
 

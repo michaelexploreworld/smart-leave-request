@@ -6,18 +6,17 @@ import {
 } from "react-router-dom";
 
 import './App.css';
-import HomeComponent from './home/HomeComponent';
+import HomeContainer from './home/HomeContainer';
 import LoginContainer from './login/LoginContainer';
-import PrivateRoute from './common/PrivateRoute';
 
 class App extends Component {
   render() {
     return (
       <Router>
         <Switch>
-          <PrivateRoute path="/" exact component={HomeComponent} />
+          <Route path="/" exact component={HomeContainer} />
           <Route path="/login" component={LoginContainer} />
-          <PrivateRoute path="/addLeaveRequest" component={HomeComponent} />
+          <Route path="/addLeaveRequest" component={HomeContainer} />
           <Route component={LoginContainer} />
         </Switch>
       </Router>

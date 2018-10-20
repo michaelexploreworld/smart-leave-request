@@ -9,7 +9,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 
-import { isValid } from '../../utils/userService'
+import { isAuthenticated } from '../../utils/userService'
 
 const styles = theme => ({
     layout: {
@@ -49,9 +49,11 @@ class LoginComponent extends Component {
     }
 
     componentWillMount() {
-        if(isValid()) {
+        const { loggingIn, user } = this.props;
+
+        if(loggingIn && isAuthenticated(user)) {
             this.props.history.push('/');
-        } 
+        }
     }
 
     componentDidUpdate(prevProps) {

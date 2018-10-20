@@ -1,17 +1,6 @@
 import types from './types';
-import { isValid, extractUser, logout } from '../../../utils/userService';
 
-let INITIAL_STATE;
-if(isValid()) {
-    let user = extractUser();
-    INITIAL_STATE = { 
-        loggedIn: true, 
-        user 
-    };
-} else {
-    INITIAL_STATE = {};
-    logout();
-} 
+let INITIAL_STATE = {};
 
 const applyLoginSuccess = (state, action) => ({
     loggingIn: true,
