@@ -36,8 +36,19 @@ const createLeaveRequestMutation = gql`
     }
 `;
 
+const deleteLeaveRequestMutataion = gql`
+    mutation($id: Int!) {
+        LeaveRequests {
+            delete(id: $id) {
+                id
+            }
+        }
+    }
+`;
+
 export {
     getLeaveRequestsQuery,
     getLeaveTypesQuery,
-    createLeaveRequestMutation
+    createLeaveRequestMutation,
+    deleteLeaveRequestMutataion
 };

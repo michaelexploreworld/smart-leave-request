@@ -101,7 +101,7 @@ let EnhancedTableToolbar = props => {
             <div className={classes.actions}>
                 {(numSelected > 0) && 
                     <Tooltip title="Delete">
-                        <IconButton aria-label="Delete">
+                        <IconButton aria-label="Delete" onClick={props.onDelete}>
                             <DeleteIcon />
                         </IconButton>
                     </Tooltip>
@@ -137,7 +137,6 @@ class EnhancedTableComponent extends React.Component {
 
         this.state = {
             selected: [],
-            data: props.data,
             page: 0,
             rowsPerPage: 5
         };
@@ -145,7 +144,7 @@ class EnhancedTableComponent extends React.Component {
 
     handleSelectAllClick = event => {
         if (event.target.checked) {
-            this.setState(state => ({ selected: state.data.map(n => n.id) }));
+            this.setState(state => ({ selected: this.props.data.map(n => n.id) }));
             return;
         }
         this.setState({ selected: [] });
@@ -186,14 +185,19 @@ class EnhancedTableComponent extends React.Component {
         return moment.tz(dateStr, "Australia/Sydney").format('YYYY-MM-DD');
     }
 
+    deleteSelectedItems = () => {
+        this.props.onDeleteRequest(this.state.selected);
+        this.setState({ selected: [] });
+    }
+
     render() {
-        const { classes } = this.props;
-        const { data, selected, rowsPerPage, page } = this.state;
+        const { classes, data } = this.props;
+        const { selected, rowsPerPage, page } = this.state;
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
             <Paper className={classes.root}>
-                <EnhancedTableToolbar numSelected={selected.length} />
+                <EnhancedTableToolbar numSelected={selected.length} onDelete={this.deleteSelectedItems}/>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
                         <EnhancedTableHead
