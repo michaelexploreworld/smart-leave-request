@@ -119,10 +119,6 @@ EnhancedTableToolbar.propTypes = {
 EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
-    root: {
-        width: "100%",
-        marginTop: theme.spacing.unit * 3
-    },
     table: {
         minWidth: 700
     },
@@ -196,7 +192,7 @@ class EnhancedTableComponent extends React.Component {
         const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
         return (
-            <Paper className={classes.root}>
+            <React.Fragment >
                 <EnhancedTableToolbar numSelected={selected.length} onDelete={this.deleteSelectedItems}/>
                 <div className={classes.tableWrapper}>
                     <Table className={classes.table} aria-labelledby="tableTitle">
@@ -260,7 +256,7 @@ class EnhancedTableComponent extends React.Component {
                     onChangePage={this.handleChangePage}
                     onChangeRowsPerPage={this.handleChangeRowsPerPage}
                 />
-            </Paper>
+            </React.Fragment>
         );
     }
 }

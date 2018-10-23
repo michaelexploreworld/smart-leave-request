@@ -11,7 +11,7 @@ const applyLoginFailure = (state, action) => ({
     message: action.error
 });
 
-const applyLogout = (state, action) => {};
+const applyLogout = (state, action) => ({});
 
 const signinReducer = (state = INITIAL_STATE, action) => {
     switch(action.type) {

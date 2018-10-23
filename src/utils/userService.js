@@ -39,6 +39,10 @@ function login(username, password) {
         });
 }
 
+function logout() {
+    localStorage.removeItem('user');
+}
+
 function extractUser(token) {
     let user = {};
     
@@ -76,6 +80,7 @@ function authHeader() {
 
 export {
     login,
+    logout,
     isAuthenticated,
     authHeader
 };
