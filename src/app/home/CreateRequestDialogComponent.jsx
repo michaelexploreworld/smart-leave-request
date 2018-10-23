@@ -18,7 +18,11 @@ class CreateRequestDialogComponent extends Component {
 	};
 
 	handleChange = name => event => {
-		this.setState({ [name]: event.target.value });
+		if(name === "leaveType") {
+			this.setState({ [name]: JSON.parse(event.target.value) });
+		} else {
+			this.setState({ [name]: event.target.value });
+		}
 	};
 
 	handleCreate = (e) => {

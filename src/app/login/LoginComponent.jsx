@@ -57,7 +57,7 @@ class LoginComponent extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.loggingIn !== prevProps.loggingIn && this.props.loggingIn) {
+        if (!prevProps.loggingIn && this.props.loggingIn) {
             this.props.history.push('/');
         }
     }

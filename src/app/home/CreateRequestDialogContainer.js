@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onCreateRequest: (userId, leaveType, startDate, endDate) => {
+    onCreateRequest: (userId, leaveType, startDate, endDate, createdDate) => {
         dispatch(homeActions.doCreateLeaveRequest(userId, leaveType, startDate, endDate))
     },
     onClearCreateMessage: () => dispatch(homeActions.doClearCreateLeaveRequestError())

@@ -28,9 +28,6 @@ const styles = theme => ({
 });
 
 class HomeComponent extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     componentDidMount() {
         const { onFetchRequest, onClearFetchMessage } = this.props;
@@ -39,7 +36,8 @@ class HomeComponent extends Component {
     }
 
     render() {
-        const { classes, user, leaveRequests, fetchMessage } = this.props;
+        const { classes, user, leaveRequests, fetchMessage, history } = this.props;
+        const modal = (this.props.modal) ? this.props.modal : false;
 
         return (
             <Grid container spacing={24} className={classes.layout}>
@@ -74,7 +72,7 @@ class HomeComponent extends Component {
                 </Grid>
                 <Grid item md={1} lg={2}></Grid>
                 <div className={classes.floatButton}>
-                    <CreateButtonComponent>
+                    <CreateButtonComponent open={modal} history={history}>
                         <CreateRequestDialogContainer userId={user.user_id}/>
                     </CreateButtonComponent>
                 </div>

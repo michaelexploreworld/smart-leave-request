@@ -96,7 +96,7 @@ export default function withAppBar(WrappedComponent) {
                             </Popper>
                         </Toolbar>
                     </AppBar>
-                    <WrappedComponent />
+                    <WrappedComponent {...this.props}/>
                 </React.Fragment>
               );
         }

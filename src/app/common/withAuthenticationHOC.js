@@ -16,9 +16,9 @@ export default function withAuthentication(WrappedComponent) {
             } else if(loggingIn && !isAuthenticated(user)) {
                 logout();
                 onLogoutRequest();
-                return <LoginContainer />;
+                return <LoginContainer {...this.props}/>;
             } else {
-                return <LoginContainer />;
+                return <LoginContainer {...this.props} />;
             }
         }
     }

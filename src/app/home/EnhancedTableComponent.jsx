@@ -10,7 +10,6 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -220,7 +219,7 @@ class EnhancedTableComponent extends React.Component {
                                                 <Checkbox checked={isSelected} />
                                             </TableCell>
                                             <TableCell>
-                                                {n.leave_type && n.leave_type.label}
+                                                {n.leave_type}
                                             </TableCell>
                                             <TableCell>
                                                 {n.start_datetime && this.formatDate(n.start_datetime)}

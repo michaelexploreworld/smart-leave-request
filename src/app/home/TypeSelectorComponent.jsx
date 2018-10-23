@@ -15,7 +15,11 @@ class TypeSelectorComponent extends Component {
             return (<option disabled>Error! {error.message}</option>);
         } else {
             return data.LeaveTypes.map((type => {
-                return (<option key={type.id} value={type.id}>{type.label}</option>);
+                const value = {
+                    id: type.id,
+                    label: type.label
+                };
+                return (<option key={type.id} value={JSON.stringify(value)}>{type.label}</option>);
             }));
         }
     }
@@ -29,7 +33,7 @@ class TypeSelectorComponent extends Component {
                         <InputLabel htmlFor="leave-type">Leave type</InputLabel>
                         <Select
                             native
-                            value={leaveType}
+                            value={JSON.stringify(leaveType)}
                             onChange={handleTypeChange}
                             name="leaveType"
                             inputProps={{

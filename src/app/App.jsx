@@ -14,9 +14,14 @@ class App extends Component {
     return (
       <Router>
         <Switch>
-          <Route path="/" exact component={HomeContainer} />
+          <Route 
+            path="/" 
+            exact
+            render={(props) => <HomeContainer {...props} modal={false} />} />
           <Route path="/login" component={LoginContainer} />
-          <Route path="/addLeaveRequest" component={HomeContainer} />
+          <Route 
+            path="/createLeaveRequest" 
+            render={(props) => <HomeContainer {...props} modal={true} />} />
           <Route component={LoginContainer} />
         </Switch>
       </Router>
