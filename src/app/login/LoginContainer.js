@@ -11,7 +11,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onLoginRequest: (username, password) => dispatch(loginActions.doLoginRequest(username, password))
+    onLoginRequest: (username, password) => dispatch(loginActions.doLoginRequest(username, password)),
+    onLogoutRequest: () => dispatch(loginActions.doLogout()),
 });
 
 const enhance = compose(
