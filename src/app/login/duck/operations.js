@@ -16,6 +16,6 @@ function* handleLoginRequest(action) {
     }
 }
 
-export  default { 
+export default { 
     handleLoginRequest,
 };

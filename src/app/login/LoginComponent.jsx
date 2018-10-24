@@ -84,7 +84,7 @@ class LoginComponent extends Component {
         this.setState({ open: false });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         const { loggingIn, user } = this.props;
         if(loggingIn && isAuthenticated(user)) {
             // If user has authenticated, redirect to home page.

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import Button from '@material-ui/core/Button';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import ErrorIcon from '@material-ui/icons/Error';
 import InfoIcon from '@material-ui/icons/Info';
@@ -95,14 +94,6 @@ const messageType = {
 };
 
 class MessageBar extends React.Component {
-
-    handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-        this.setState({ open: false });
-    };    
-
     render() {
         const { open, variant, message, handleClose } = this.props;
 

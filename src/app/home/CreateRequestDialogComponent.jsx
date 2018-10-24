@@ -7,14 +7,39 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import withStyles from '@material-ui/core/styles/withStyles';
 
 import TypeSelectorComponent from './TypeSelectorComponent';
+import { messageType, MessageBar } from '../common/MessageBar';
+
+const styles = theme => ({
+    hidden: {
+		position: 'relative',
+        visibility: 'hidden',
+    },
+    loading: {
+		position: 'absolute',
+		margin: 'auto',
+		left: 0,
+		right: 0,
+		top: 0,
+		bottom: 0,
+		visibility: 'visible',
+	},
+	messageBar: {
+		position:'absolute',
+		zIndex: 10000
+	}
+});
 
 class CreateRequestDialogComponent extends Component {
 	state = {
 		leaveType: '',
 		startDate: '',
-		endDate: ''
+		endDate: '',
+		loading: false,
+		messageShow: false
 	};
 
 	handleChange = name => event => {
@@ -28,85 +53,118 @@ class CreateRequestDialogComponent extends Component {
 	handleCreate = (e) => {
 		e.preventDefault();
 
-		const { userId, onCreateRequest } = this.props;
+		const { userId, onCreateRequest, onClearCreateMessage } = this.props;
 		const { leaveType, startDate, endDate } = this.state;
 
+		this.setState({ loading: true });
+		onClearCreateMessage();
 		onCreateRequest(userId, leaveType, startDate, endDate);
 	}
 
+	handleMessageBarOpen = () => {
+        this.setState({ messageShow: true });
+    }
+
+    handleMessageBarClose = () => {
+        this.setState({ messageShow: false });
+	}
+
 	componentDidUpdate(prevProps) {
-		// Close dialog when uer submit successfully.
-		if(this.props.createMessage === 'success') {
-			this.props.handleClose();
-			this.props.onClearCreateMessage();
-			this.setState({
-				leaveType: '',
-				startDate: '',
-				endDate: ''
-			});
+		if(prevProps.createMessage !== this.props.createMessage) {
+			// Close dialog when uer submit successfully.
+			if(this.props.createMessage === 'success') {
+				this.handleMessageBarOpen();
+				this.setState({ loading: false });
+				this.props.handleClose();
+			} else if(this.props.createMessage) { // Show error message.
+				this.handleMessageBarOpen();
+				this.setState({ loading: false });
+			}
 		}
 	}
 
 	render() {
-		const { fullScreen, open, handleClose, createMessage } = this.props;
-		const { leaveType, startDate, endDate } = this.state;
+		const { fullScreen, open, handleClose, createMessage, classes } = this.props;
+		const { leaveType, startDate, endDate, loading, messageShow } = this.state;
+		let messageBar;
+
+
+		if(createMessage && createMessage === 'success') {
+			messageBar = 
+				<MessageBar 
+					className={classes.messageBar}
+					open={messageShow} 
+					variant={messageType.SUCCESS} 
+					message="Create leave request successfully" 
+					handleClose={this.handleMessageBarClose} />
+		} else if(createMessage) {
+			messageBar = 
+				<MessageBar 
+					className={classes.messageBar}
+					open={messageShow} 
+					variant={messageType.ERROR} 
+					message={createMessage} 
+					handleClose={this.handleMessageBarClose} />
+		}
 
 		return (
-			<Dialog
-				fullScreen={fullScreen}
-				open={open}
-				onClose={handleClose}
-				aria-labelledby="responsive-dialog-title"
-			>
-				<DialogTitle id="responsive-dialog-title">Create Leave Request</DialogTitle>
-				<DialogContent>
-					<Grid container spacing={24}>
-						{createMessage && createMessage !== 'success' && 
-							<Grid item xs={12}>
-								<div id="createMessage">{createMessage}</div>
-							</Grid>}
-						<Grid item xs={12}>
-							<TypeSelectorComponent leaveType={leaveType} handleTypeChange={this.handleChange('leaveType')}/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								id="startDate"
-								label="Start date"
-								type="date"
-								defaultValue={startDate}
-								InputLabelProps={{
-									shrink: true,
-								}}
-								fullWidth
-								required
-								onChange={this.handleChange('startDate')}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<TextField
-								id="endDate"
-								label="End date"
-								type="date"
-								defaultValue={endDate}
-								InputLabelProps={{
-									shrink: true,
-								}}
-								fullWidth
-								required
-								onChange={this.handleChange('endDate')}
-							/>
-						</Grid>
-					</Grid>
-				</DialogContent>
-				<DialogActions>
-					<Button onClick={handleClose} color="primary">
-						Cancel
-					</Button>
-					<Button onClick={this.handleCreate} color="primary" autoFocus>
-						Create
-					</Button>
-				</DialogActions>
-			</Dialog>
+			<div>
+				{messageBar}
+				<Dialog
+					fullScreen={fullScreen}
+					open={open}
+					onClose={handleClose}
+					aria-labelledby="responsive-dialog-title"
+				>
+					<div className={(loading) ? classes.hidden : ''}>
+						<DialogTitle id="responsive-dialog-title">Create Leave Request</DialogTitle>
+						<DialogContent>
+							<Grid container spacing={24}>
+								<Grid item xs={12}>
+									<TypeSelectorComponent leaveType={leaveType} handleTypeChange={this.handleChange('leaveType')}/>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										id="startDate"
+										label="Start date"
+										type="date"
+										defaultValue={startDate}
+										InputLabelProps={{
+											shrink: true,
+										}}
+										fullWidth
+										required
+										onChange={this.handleChange('startDate')}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<TextField
+										id="endDate"
+										label="End date"
+										type="date"
+										defaultValue={endDate}
+										InputLabelProps={{
+											shrink: true,
+										}}
+										fullWidth
+										required
+										onChange={this.handleChange('endDate')}
+									/>
+								</Grid>
+							</Grid>
+						</DialogContent>
+						<DialogActions>
+							<Button onClick={handleClose} color="primary">
+								Cancel
+							</Button>
+							<Button onClick={this.handleCreate} color="primary" autoFocus>
+								Create
+							</Button>
+						</DialogActions>
+						{loading && <CircularProgress className={classes.loading}  size={50} color="primary" />}
+					</div>
+				</Dialog>
+			</div>
 		);
 	}
 }
@@ -115,4 +173,4 @@ CreateRequestDialogComponent.propTypes = {
   	fullScreen: PropTypes.bool.isRequired,
 };
 
-export default CreateRequestDialogComponent;
+export default withStyles(styles)(CreateRequestDialogComponent);

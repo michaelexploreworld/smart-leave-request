@@ -10,6 +10,8 @@ import CreateButtonComponent from './CreateButtonComponent';
 import CreateRequestDialogContainer from './CreateRequestDialogContainer';
 
 const styles = theme => ({
+    logo: {},
+    popper: {},
     layout: {
         marginTop: theme.spacing.unit * 2
     },
@@ -36,7 +38,7 @@ class HomeComponent extends Component {
     }
 
     render() {
-        const { classes, user, leaveRequests, fetchMessage, history } = this.props;
+        const { classes, user, leaveRequests, history } = this.props;
         const modal = (this.props.modal) ? this.props.modal : false;
 
         return (
